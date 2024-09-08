@@ -1,0 +1,43 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    height: 80px;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo h2 {
+    margin-left: 10px;
+  }
+  
+  .links {
+    display: flex;
+  }
+  
+  .nav-link {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .toggle-and-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .toggle-switch {
+    margin-right: 15px;
+  }
+  
+  .profile-icon {
+    font-size: 20px;
+  }
+  
