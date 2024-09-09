@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema(
     {
-        title: {
+        name: {
             type: String,
             required: true,
         },
@@ -10,24 +10,28 @@ const projectSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        creator: {
+        createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
-        tasks : [
+        tasks: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Task",
-            }
+            },
         ],
-
+        members: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
     },
     {
         timestamps: true,
     }
 );
-
 
 const Project = mongoose.model("Project", projectSchema);
 

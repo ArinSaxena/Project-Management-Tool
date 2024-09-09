@@ -14,18 +14,25 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
+            select: false,
         },
-        role: {
-            type: String,
-            enum: ["enginner", "admin", "manager"],
-            default: "engineer",
-        },
+        projects: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Project",
+            },
+        ],
+        tasks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Task",
+            },
+        ],
     },
     {
         timestamps: true,
     }
 );
-
 
 const User = mongoose.model("User", userSchema);
 

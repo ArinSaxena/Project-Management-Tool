@@ -1,15 +1,17 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
+const Task = require("../models/taskModel");
+const Project = require("../models/projectModel");
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
 async function createUser(req, res) {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password } = req.body;
 
-        if (!name || !email || !password || !role) {
+        if (!name || !email || !password) {
             return res.status(400).json({
                 message: "Please fill in all fields",
             });
@@ -40,24 +42,21 @@ async function createUser(req, res) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
-            role,
         });
         const token = await generateToken(user);
 
         res.status(201).json({
             messaage: "User created successfully",
-            user : {
+            user: {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role,
                 token,
-            }
+            },
         });
     } catch (error) {
         res.status(400).json({
@@ -65,7 +64,6 @@ async function createUser(req, res) {
         });
     }
 }
-
 
 async function loginUser(req, res) {
     try {
@@ -88,15 +86,11 @@ async function loginUser(req, res) {
                 message:
                     "Password must be between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter",
             });
-
         }
-
-
-
 
         const user = await User.findOne({
             email,
-        });
+        }).select("+password");
 
         if (!user) {
             return res.status(400).json({
@@ -120,7 +114,6 @@ async function loginUser(req, res) {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role,
                 token,
             },
         });
@@ -130,7 +123,6 @@ async function loginUser(req, res) {
         });
     }
 }
-
 
 async function getUsers(req, res) {
     try {
@@ -162,13 +154,12 @@ async function getUserById(req, res) {
 async function updateUser(req, res) {
     try {
         const { id } = req.params;
-        const { name, email, password, role } = req.body;
+        const { name, email, password } = req.body;
 
         const user = await User.findByIdAndUpdate(id, {
             name,
             email,
             password,
-            role,
         });
         res.status(200).json({
             message: "User updated successfully",
@@ -184,6 +175,14 @@ async function deleteUser(req, res) {
     try {
         const { id } = req.params;
         await User.findByIdAndDelete(id);
+
+        await Task.updateMany(
+            { assigned_to: id },
+            { $pull: { assigned_to: id } }
+        );
+
+        await Project.updateMany({ members: id }, { $pull: { members: id } });
+
         res.status(200).json({
             message: "User deleted successfully",
         });
@@ -194,14 +193,11 @@ async function deleteUser(req, res) {
     }
 }
 
-
-
 module.exports = {
     createUser,
     getUsers,
     getUserById,
     updateUser,
     deleteUser,
-    loginUser
+    loginUser,
 };
-
