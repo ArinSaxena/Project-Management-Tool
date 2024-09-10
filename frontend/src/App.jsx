@@ -1,25 +1,18 @@
 import React from "react";
-import { Navigate, Routes, Route } from "react-router-dom";
-import Members from "./Components/Members/Members";
-import Projects from "./Components/Projects/Projects";
-import Navbar from "./Components/Navbar/Navbar";
-import SingleProject from './Components/SingleProject/SingleProject'
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-  return (
-    <div className="App">
-      <Navbar />
-
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        {/* <Route path='/Signup' element={<Signup/>}/> */}
-        {/* <Route path='/login' element={<Login/>}/> */}
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/project/:id" element={<SingleProject/>}/>
-        <Route path="/members" element={<Members />} />
-      </Routes>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Routes>
+                <Route path="/" element={<h1>Home Page</h1>} />
+                <Route path="/Signup" element={<h1>Signup</h1>} />
+                <Route path="/login" element={<h1>Signin</h1>} />
+                <Route path="/projects" element={<h1>Projects</h1>} />
+                <Route path="/project/:id" element={<h1>Signle project</h1>} />
+            </Routes>
+        </div>
+    );
 }
 
 export default App;
